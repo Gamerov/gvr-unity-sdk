@@ -13,3 +13,6 @@ obj/
 
 # OS generated
 .DS_Store
+
+# oculus signature files
+oculussig_*
