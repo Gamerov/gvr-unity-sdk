@@ -77,7 +77,7 @@ public class UnifiedVRInspectorLoader : MonoBehaviour
 
         UnifiedVRInspector.instance.allowClose = allowClose;
 
-        UnifiedVRInspector.instance.audioListenerToUse = audioListenerToUse;
+        UnifiedVRInspector.audioListenerToUse = audioListenerToUse;
     }
 
     void Start()

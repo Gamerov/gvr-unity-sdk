@@ -26,17 +26,33 @@ using UnityEngine.EventSystems;
 
 public class UnifiedVRInspector : OVRInspector
 {
-    // Singleton instance
-    public new static UnifiedVRInspector instance { get; private set; }
-
     // Input module
-    private UnifiedVRInputModule unifiedVRInputModule;
+    private UnifiedVRInputModule inputModule;
 
     [HideInInspector]
-    public AudioListenerToUse audioListenerToUse;
+    public static AudioListenerToUse audioListenerToUse;
 
     public override void OnAwakeOrLevelLoad()
     {
+        base.OnAwakeOrLevelLoad();
+        EventSystem eventSystem = GameObject.FindObjectOfType<EventSystem>();
+
+        inputModule = eventSystem.GetComponent<UnifiedVRInputModule>();
+        eventSystem.GetComponent<UnifiedVRInputModule>().rayTransform = cameraRig.centerEyeAnchor;
+
+
+        // disable other audio listeners
+        if (audioListenerToUse == AudioListenerToUse.Daydream)
+        {
+            cameraRig.centerEyeAnchor.GetComponent<AudioListener>().enabled = false;
+        }
+
+        else
+        {
+
+        }
+
+        /*
         if (instance != this)
             return;
 
@@ -89,16 +105,6 @@ public class UnifiedVRInspector : OVRInspector
         {
             Debug.LogError("Camera rig has ScreenFade objects");
         }
-
-        // disable other audio listeners
-        if (audioListenerToUse == AudioListenerToUse.Daydream)
-        {
-
-        }
-
-        else
-        {
-
-        }
+        */
     }
 }

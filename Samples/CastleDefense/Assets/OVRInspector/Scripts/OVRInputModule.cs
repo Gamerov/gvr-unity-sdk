@@ -89,8 +89,8 @@ namespace UnityEngine.EventSystems
         #region StandaloneInputModule code
          private float m_NextAction;
 
-        private Vector2 m_LastMousePosition;
-        private Vector2 m_MousePosition;
+        protected Vector2 m_LastMousePosition;
+        protected Vector2 m_MousePosition;
 
         protected OVRInputModule()
         {}
@@ -114,25 +114,25 @@ namespace UnityEngine.EventSystems
         }
         [Header("Standalone Input Module")]
         [SerializeField]
-        private string m_HorizontalAxis = "Horizontal";
+        protected string m_HorizontalAxis = "Horizontal";
 
         /// <summary>
         /// Name of the vertical axis for movement (if axis events are used).
         /// </summary>
         [SerializeField]
-        private string m_VerticalAxis = "Vertical";
+        protected string m_VerticalAxis = "Vertical";
 
         /// <summary>
         /// Name of the submit button.
         /// </summary>
         [SerializeField]
-        private string m_SubmitButton = "Submit";
+        protected string m_SubmitButton = "Submit";
 
         /// <summary>
         /// Name of the submit button.
         /// </summary>
         [SerializeField]
-        private string m_CancelButton = "Cancel";
+        protected string m_CancelButton = "Cancel";
 
         [SerializeField]
         private float m_InputActionsPerSecond = 10;
@@ -229,12 +229,12 @@ namespace UnityEngine.EventSystems
             ClearSelection();
         }
 
-        
+
 
         /// <summary>
         /// Process submit keys.
         /// </summary>
-        private bool SendSubmitEventToSelectedObject()
+        protected bool SendSubmitEventToSelectedObject()
         {
             if (eventSystem.currentSelectedGameObject == null)
                 return false;
@@ -282,7 +282,7 @@ namespace UnityEngine.EventSystems
         /// <summary>
         /// Process keyboard events.
         /// </summary>
-        private bool SendMoveEventToSelectedObject()
+        protected bool SendMoveEventToSelectedObject()
         {
             float time = Time.unscaledTime;
 
@@ -301,11 +301,11 @@ namespace UnityEngine.EventSystems
             return axisEventData.used;
         }
 
-        
 
-        
 
-        private bool SendUpdateEventToSelectedObject()
+
+
+        protected bool SendUpdateEventToSelectedObject()
         {
             if (eventSystem.currentSelectedGameObject == null)
                 return false;
@@ -421,15 +421,15 @@ namespace UnityEngine.EventSystems
                 }
             }
         }
-#endregion
+        #endregion
         #region Modified StandaloneInputModule methods
-        
+
         /// <summary>
         /// Process all mouse events. This is the same as the StandaloneInputModule version except that
         /// it takes MouseState as a parameter, allowing it to be used for both Gaze and Mouse 
         /// pointerss.
         /// </summary>
-        private void ProcessMouseEvent(MouseState mouseData)
+        protected void ProcessMouseEvent(MouseState mouseData)
         {
             var pressed = mouseData.AnyPressesThisFrame();
             var released = mouseData.AnyReleasesThisFrame();
