@@ -75,9 +75,9 @@ public class OVRCameraRig : MonoBehaviour
 
 	private readonly string trackingSpaceName = "TrackingSpace";
 	private readonly string trackerAnchorName = "TrackerAnchor";
-	private readonly string eyeAnchorName = "EyeAnchor";
+	protected readonly string eyeAnchorName = "EyeAnchor";
 	private readonly string handAnchorName = "HandAnchor";
-	private readonly string legacyEyeAnchorName = "Camera";
+    protected readonly string legacyEyeAnchorName = "Camera";
 
 #if UNITY_ANDROID && !UNITY_EDITOR
     bool correctedTrackingSpace = false;
@@ -228,7 +228,7 @@ public class OVRCameraRig : MonoBehaviour
 		return root;
 	}
 
-	private Transform ConfigureEyeAnchor(Transform root, VR.VRNode eye)
+	virtual protected Transform ConfigureEyeAnchor(Transform root, VR.VRNode eye)
 	{
 		string eyeName = (eye == VR.VRNode.CenterEye) ? "Center" : (eye == VR.VRNode.LeftEye) ? "Left" : "Right";
 		string name = eyeName + eyeAnchorName;
@@ -247,7 +247,7 @@ public class OVRCameraRig : MonoBehaviour
 
 		if (anchor == null)
 		{
-			anchor = new GameObject(name).transform;
+           anchor = new GameObject(name).transform;
 		}
 
 		anchor.name = name;

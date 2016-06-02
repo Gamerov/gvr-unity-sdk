@@ -190,7 +190,7 @@ public class OVRInspector : MonoBehaviour
     public GameObject leftCamera { get; private set; }
     public GameObject rightCamera { get; private set; }
     public OVRManager manager { get; private set; }
-    public Transform centerEyeTransform { get; private set; }
+    public Transform centerEyeTransform { get; protected set; }
     
     
     
@@ -410,7 +410,7 @@ public class OVRInspector : MonoBehaviour
         }
     }
 
-    protected void FindPlayerAndCamera()
+    virtual protected void FindPlayerAndCamera()
     {
         playerController = FindObjectOfType<OVRPlayerController>();
         if (playerController && playerController.gameObject.layer != playerLayer)

@@ -102,7 +102,7 @@ namespace UnityEngine.EventSystems
 
         #region OverriddenFunctions
 
-        /* These functions were overriden fromthe Sample Base Framework code  */
+        /* These functions were overriden from the Sample Base Framework code  */
 
         /// @cond
         public override bool ShouldActivateModule()

@@ -52,59 +52,17 @@ public class UnifiedVRInspector : OVRInspector
 
         }
 
-        /*
-        if (instance != this)
-            return;
+    }
 
-        OVRManager.display.RecenterPose();
+    override protected void FindPlayerAndCamera()
+    {
+        base.FindPlayerAndCamera();
 
-        FindPlayerAndCamera();
-        // There has to be an event system for the GUI to work
-        EventSystem eventSystem = GameObject.FindObjectOfType<EventSystem>();
-        if (eventSystem == null)
+        if (cameraRig)
         {
-            Debug.Log("Creating EventSystem");
-            eventSystem = (EventSystem)GameObject.Instantiate(eventSystemPrefab);
+            Transform t = cameraRig.transform.FindChild("TrackingSpace").FindChild("Head");
+            centerEyeTransform = t.FindChild("CenterEyeAnchor");
 
         }
-        else
-        {
-            //and a UnifiedVRInputModule
-            if (eventSystem.GetComponent<UnifiedVRInputModule>() == null)
-            {
-                eventSystem.gameObject.AddComponent<UnifiedVRInputModule>();
-            }
-        }
-
-        unifiedVRInputModule = eventSystem.GetComponent<UnifiedVRInputModule>();
-
-        playerController = FindObjectOfType<OVRPlayerController>();
-        if (playerController)
-        {
-            CachePlayerControlDefaults();
-        }
-
-        cameraRig.EnsureGameObjectIntegrity();
-        eventSystem.GetComponent<UnifiedVRInputModule>().rayTransform = cameraRig.centerEyeAnchor;
-        canvas.GetComponent<Canvas>().worldCamera = cameraRig.leftEyeCamera;
-
-        // make sure we have a new fader object
-        fader = cameraRig.GetComponentInChildren<OVRScreenFade2>();
-
-        if (fader == null)
-        {
-            GameObject fadeObj = Instantiate(Resources.Load("Prefabs/UnifiedVRFader", typeof(GameObject))) as GameObject;
-            fadeObj.transform.SetParent(cameraRig.centerEyeAnchor, false);
-            fader = fadeObj.GetComponent<OVRScreenFade2>();
-        }
-        fader.PositionForCamera(cameraRig);
-
-        // Make sure legacy fader objects are not present
-        if (cameraRig.leftEyeAnchor.GetComponent<OVRScreenFade>() != null ||
-            cameraRig.rightEyeAnchor.GetComponent<OVRScreenFade>() != null)
-        {
-            Debug.LogError("Camera rig has ScreenFade objects");
-        }
-        */
     }
 }
