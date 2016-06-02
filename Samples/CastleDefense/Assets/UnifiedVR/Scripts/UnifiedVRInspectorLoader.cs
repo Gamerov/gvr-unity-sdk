@@ -26,8 +26,18 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 
+public enum AudioListenerToUse
+{
+    Daydream,
+    Oculus
+}
+
 public class UnifiedVRInspectorLoader : MonoBehaviour
 {
+
+    [Tooltip("Makes sure there is only 1 audio listener in the scene")]
+    public AudioListenerToUse audioListenerToUse;
+
     [Tooltip("Allow the player to close the UI")]
     public bool allowClose = true;
     [Tooltip("Panel which will be added to the main UI when it is loaded")]
@@ -66,6 +76,8 @@ public class UnifiedVRInspectorLoader : MonoBehaviour
         UnifiedVRInspector.instance.LoadSceneSpecificContextsFromPanel(donorPanel);
 
         UnifiedVRInspector.instance.allowClose = allowClose;
+
+        UnifiedVRInspector.instance.audioListenerToUse = audioListenerToUse;
     }
 
     void Start()

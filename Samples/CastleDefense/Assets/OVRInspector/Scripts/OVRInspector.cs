@@ -175,11 +175,11 @@ public class OVRInspector : MonoBehaviour
     {
         get;
 
-        private set;
+        protected set;
     }
 
     // OVR SDK Objects for convenience
-    public OVRPlayerController playerController { get; private set; }
+    public OVRPlayerController playerController { get; protected set; }
     static public OVRCameraRig cameraRig 
     {
         get
@@ -195,7 +195,7 @@ public class OVRInspector : MonoBehaviour
     
     
     // GUI Canvas and Panels
-    GameObject canvas;
+    protected GameObject canvas;
     OVRInspectorPanelBuilder centerPanel;
     OVRInspectorPanelBuilder leftPanel;
     OVRInspectorPanelBuilder rightPanel;
@@ -241,7 +241,7 @@ public class OVRInspector : MonoBehaviour
     private OVRInputModule inputModule;
 
     // Prefabs
-    private EventSystem eventSystemPrefab;
+    protected EventSystem eventSystemPrefab;
     private Button buttonPrefab;
     private Button folderPrefab;
 
@@ -356,7 +356,7 @@ public class OVRInspector : MonoBehaviour
         }
     }
 
-    void OnAwakeOrLevelLoad()
+    public virtual void OnAwakeOrLevelLoad()
     {
         if (instance != this)
             return;
@@ -410,7 +410,7 @@ public class OVRInspector : MonoBehaviour
         }
     }
 
-    void FindPlayerAndCamera()
+    protected void FindPlayerAndCamera()
     {
         playerController = FindObjectOfType<OVRPlayerController>();
         if (playerController && playerController.gameObject.layer != playerLayer)
@@ -1193,7 +1193,7 @@ public class OVRInspector : MonoBehaviour
 
 
     #region Player Controller Caching
-    void CachePlayerControlDefaults()
+    protected void CachePlayerControlDefaults()
     {
         playerController.GetSkipMouseRotation(ref previouslySkippingMouseRotation);
         playerController.GetHaltUpdateMovement(ref previouslyHaltedMovementUpdate);
