@@ -44,7 +44,7 @@ public class UnifiedVRInspector : OVRInspector
         // disable other audio listeners
         if (audioListenerToUse == AudioListenerToUse.Daydream)
         {
-            cameraRig.centerEyeAnchor.GetComponent<AudioListener>().enabled = false;
+            ///cameraRig.centerEyeAnchor.GetComponent<AudioListener>().enabled = false;
         }
 
         else
