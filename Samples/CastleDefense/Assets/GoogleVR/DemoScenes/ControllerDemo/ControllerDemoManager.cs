@@ -97,6 +97,8 @@ public class ControllerDemoManager : MonoBehaviour {
         if (selectedObject.GetComponent<Renderer>() != null)
             selectedObject.GetComponent<Renderer>().material = cubeActiveMaterial;
 
+        else return;
+
     // Reparent the active cube so it's part of the ControllerPivot object. That will
     // make it move with the controller.
     selectedObject.transform.SetParent(controllerPivot.transform, true);
