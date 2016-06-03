@@ -35,13 +35,24 @@ public class ControllerDemoManager : MonoBehaviour {
   // to compute raycast from camera instead of origin
   public GameObject playerCamera;
 
+  // to point weapon towards crosshair
+  public GameObject weapon; 
+
     void Awake() {
   }
 
   void Update() {
+    if (weapon != null)
+            UpdateWeapon();
     UpdatePointer();
     UpdateStatusMessage();
   }
+
+  private void UpdateWeapon()
+    {
+        weapon.transform.rotation = GvrController.Orientation;
+        weapon.transform.Rotate(90f, 0f, 0f);
+    }
 
   private void UpdatePointer() {
     if (GvrController.State != GvrConnectionState.Connected) {
