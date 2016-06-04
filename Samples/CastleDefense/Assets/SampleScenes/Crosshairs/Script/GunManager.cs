@@ -103,7 +103,8 @@ public class GunManager : MonoBehaviour
     void Update()
     {
         // Fire weapon
-        if (OVRInput.Get(fireButton) || Input.GetKey(fireKey) || Input.GetMouseButtonDown(0))
+        if (OVRInput.Get(fireButton) || Input.GetKey(fireKey) || Input.GetMouseButtonDown(0)
+            || GvrController.TouchDown)
         {
             if (autoFire || !fireDepressedLastFrame)
             {

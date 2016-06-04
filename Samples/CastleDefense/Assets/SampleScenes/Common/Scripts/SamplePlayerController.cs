@@ -126,16 +126,17 @@ public class SamplePlayerController : OVRPlayerController
                 FallSpeed_ += ((Physics.gravity.y * (GravityModifier * 0.002f)) * SimulationRate_ * Time.deltaTime);
 
             moveDirection.y += FallSpeed_ * SimulationRate_ * Time.deltaTime;
+
+            // Offset correction for uneven ground
+            float bumpUpOffset = 0.0f;
+
+            if (Controller.isGrounded && MoveThrottle_.y <= 0.001f)
+            {
+                bumpUpOffset = Mathf.Max(Controller.stepOffset, new Vector3(moveDirection.x, 0, moveDirection.z).magnitude);
+                moveDirection -= bumpUpOffset * Vector3.up;
+            }
         }
 
-        // Offset correction for uneven ground
-        float bumpUpOffset = 0.0f;
-
-        if (Controller.isGrounded && MoveThrottle_.y <= 0.001f)
-        {
-            bumpUpOffset = Mathf.Max(Controller.stepOffset, new Vector3(moveDirection.x, 0, moveDirection.z).magnitude);
-            moveDirection -= bumpUpOffset * Vector3.up;
-        }
 
         Vector3 predictedXZ = Vector3.Scale((Controller.transform.localPosition + moveDirection), new Vector3(1, 0, 1));
 
@@ -189,6 +190,8 @@ public class SamplePlayerController : OVRPlayerController
         Quaternion playerDirection = ((HmdRotatesY) ? CameraRig.centerEyeAnchor.rotation : transform.rotation);
         //remove any pitch + yaw components
         playerDirection = Quaternion.Euler(0, playerDirection.eulerAngles.y, 0);
+
+        Quaternion zPlayerDirection = Quaternion.Euler(CameraRig.centerEyeAnchor.rotation.eulerAngles.x, 0, 0);
 
         Vector3 euler = transform.rotation.eulerAngles;
 
@@ -273,6 +276,12 @@ public class SamplePlayerController : OVRPlayerController
         float leftAxisX = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick).x;
         float leftAxisY = OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick).y;
 
+        if (GvrController.IsTouching)
+        {
+            leftAxisX = -0.5f + GvrController.TouchPos.x;
+            leftAxisY = 0.5f - GvrController.TouchPos.y;
+        }
+
         if (Mathf.Abs(leftAxisX) < axisDeadZone)
             leftAxisX = 0;
         if (Mathf.Abs(leftAxisY) < axisDeadZone)
@@ -302,6 +311,19 @@ public class SamplePlayerController : OVRPlayerController
         if (leftAxisX > 0.0f)
             MoveThrottle_ += leftAxisX
             * (playerDirection * (Vector3.right * moveInfluence));
+
+        /*
+        if (!gravityOn && leftAxisY != 0)
+        {
+            if (leftAxisY > 0.0f)
+                MoveThrottle_ += leftAxisY
+                * (zPlayerDirection * (Vector3.forward * moveInfluence));
+
+            if (leftAxisY < 0.0f)
+                MoveThrottle_ += Mathf.Abs(leftAxisY)
+                * (zPlayerDirection * (Vector3.back * moveInfluence));
+        }
+        */
 
         transform.rotation = Quaternion.Euler(euler);
     }
