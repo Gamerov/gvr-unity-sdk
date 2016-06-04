@@ -49,6 +49,8 @@ public class SamplePlayerController : OVRPlayerController
     // float animationStartAngle;
     bool animating;
 
+    public bool gravityOn;
+
     void Awake()
     { 
         Controller = gameObject.GetComponent<CharacterController>();
@@ -116,12 +118,15 @@ public class SamplePlayerController : OVRPlayerController
         moveDirection += MoveThrottle_ * SimulationRate_ * Time.deltaTime;
 
         // Gravity
-        if (Controller.isGrounded && FallSpeed_ <= 0)
-            FallSpeed_ = ((Physics.gravity.y * (GravityModifier * 0.002f)));
-        else
-            FallSpeed_ += ((Physics.gravity.y * (GravityModifier * 0.002f)) * SimulationRate_ * Time.deltaTime);
+        if (gravityOn)
+        {
+            if (Controller.isGrounded && FallSpeed_ <= 0)
+                FallSpeed_ = ((Physics.gravity.y * (GravityModifier * 0.002f)));
+            else
+                FallSpeed_ += ((Physics.gravity.y * (GravityModifier * 0.002f)) * SimulationRate_ * Time.deltaTime);
 
-        moveDirection.y += FallSpeed_ * SimulationRate_ * Time.deltaTime;
+            moveDirection.y += FallSpeed_ * SimulationRate_ * Time.deltaTime;
+        }
 
         // Offset correction for uneven ground
         float bumpUpOffset = 0.0f;
@@ -174,7 +179,7 @@ public class SamplePlayerController : OVRPlayerController
 
         float MoveScale = 1.0f;
         // No positional movement if we are in the air
-        if (!Controller.isGrounded)
+        if (!Controller.isGrounded && gravityOn)
             MoveScale = 0.0f;
 
         MoveScale *= SimulationRate_ * Time.deltaTime;
