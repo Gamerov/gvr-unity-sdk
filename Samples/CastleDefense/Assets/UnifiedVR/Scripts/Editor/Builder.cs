@@ -103,8 +103,8 @@ using System.IO;
         //options |= BuildOptions.ConnectWithProfiler;
         //options |= BuildOptions.Development;
 
-            Debug.Log("buildir: " + buildDirectory + ", buildpath: " + buildPath + ", target: " + buildTarget.ToString());
-            buildPath = "C:\\Builds\\UnifiedVR.apk";
+        // Debug.Log("buildir: " + buildDirectory + ", buildpath: " + buildPath + ", target: " + buildTarget.ToString());
+        // buildPath = "C:\\Builds\\UnifiedVR.apk";
 
 
         string result = BuildPipeline.BuildPlayer(scenes, buildPath, buildTarget, options);
