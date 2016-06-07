@@ -15,8 +15,59 @@ using System.IO;
         static private string buildVerCode = "1";
         static private string buildVerStr = "1.0.0";
 
-        #region Build Platforms
-        static public void BuildAndroid()
+    #region Menu Items
+
+    static private bool ShowConfirmDialog()
+    {
+        return EditorUtility.DisplayDialog(
+            string.Format("Building {0}", APP_NAME),
+            "Are you sure? This will take a while.",
+            "OK",
+            "Cancel"
+        );
+    }
+
+    [MenuItem("Build/Android", false, 0)]
+    static public void BuildAndroidFromMenu()
+    {
+        bool proceed = ShowConfirmDialog();
+        if (!proceed) return;
+
+        Build(BuildTarget.Android);
+    }
+
+    [MenuItem("Build/iOS", false, 1)]
+    static public void BuildiOSFromMenu()
+    {
+        bool proceed = ShowConfirmDialog();
+        if (!proceed) return;
+
+        Build(BuildTarget.iOS);
+    }
+
+    [MenuItem("Build/Win32", false, 3)]
+    static public void BuildWin32FromMenu()
+    {
+        bool proceed = ShowConfirmDialog();
+        if (!proceed) return;
+
+        Build(BuildTarget.StandaloneWindows);
+    }
+
+
+    [MenuItem("Build/OSX", false, 4)]
+    static public void BuildOSXFromMenu()
+    {
+        bool proceed = ShowConfirmDialog();
+        if (!proceed) return;
+
+        Build(BuildTarget.StandaloneOSXIntel);
+    }
+    #endregion
+
+
+    #region Build Platforms
+    static public void BuildAndroid()
         {
             ReadEnvVariables();
             Build(BuildTarget.Android);
@@ -70,7 +121,7 @@ using System.IO;
             {
                 case BuildTarget.Android:
                     {
-                        SetAndroidProperties();
+                        // SetAndroidProperties();
                         buildName = buildName + ".apk";
                         break;
                     }
@@ -103,11 +154,11 @@ using System.IO;
         //options |= BuildOptions.ConnectWithProfiler;
         //options |= BuildOptions.Development;
 
-        // Debug.Log("buildir: " + buildDirectory + ", buildpath: " + buildPath + ", target: " + buildTarget.ToString());
-        // buildPath = "C:\\Builds\\UnifiedVR.apk";
+        // Debug.Log("scenes: " + scenes[0].ToString() + ", buildir: " + buildDirectory + ", buildpath: " + buildPath + ", target: " + buildTarget.ToString());
 
 
-        string result = BuildPipeline.BuildPlayer(scenes, buildPath, buildTarget, options);
+           string result = BuildPipeline.BuildPlayer(scenes, buildPath, buildTarget, options);
+
 
             // Clean up
             switch (buildTarget)
