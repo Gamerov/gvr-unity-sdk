@@ -100,10 +100,14 @@ using System.IO;
             // Set build options
             BuildOptions options = BuildOptions.None;
             options |= BuildOptions.ShowBuiltPlayer;
-            //options |= BuildOptions.ConnectWithProfiler;
-            //options |= BuildOptions.Development;
+        //options |= BuildOptions.ConnectWithProfiler;
+        //options |= BuildOptions.Development;
 
-            string result = BuildPipeline.BuildPlayer(scenes, buildPath, buildTarget, options);
+            Debug.Log("buildir: " + buildDirectory + ", buildpath: " + buildPath + ", target: " + buildTarget.ToString());
+            buildPath = "C:\\Builds\\UnifiedVR.apk";
+
+
+        string result = BuildPipeline.BuildPlayer(scenes, buildPath, buildTarget, options);
 
             // Clean up
             switch (buildTarget)
