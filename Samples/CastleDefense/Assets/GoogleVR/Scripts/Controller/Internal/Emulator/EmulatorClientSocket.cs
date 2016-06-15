@@ -48,7 +48,10 @@ namespace Gvr.Internal {
 
       phoneRemote = remote;
 
-      if (EmulatorConfig.Instance.PHONE_EVENT_MODE != EmulatorConfig.Mode.OFF) {
+       EmulatorConfig.Mode mode = EmulatorConfig.Instance.PHONE_EVENT_MODE;
+       if (phoneRemote.emulatorConfig != null) mode = phoneRemote.emulatorConfig.PHONE_EVENT_MODE;
+
+      if (mode != EmulatorConfig.Mode.OFF) {
         phoneEventThread = new Thread(phoneEventSocketLoop);
         phoneEventThread.Start();
       }
@@ -90,9 +93,20 @@ namespace Gvr.Internal {
       long lastConnectionAttemptTime = 0;
       bool isFirstTry = true;
 
+            EmulatorConfig.Mode mode = EmulatorConfig.Instance.PHONE_EVENT_MODE;
+            string usb_server_ip = EmulatorConfig.USB_SERVER_IP;
+            string wifi_server_ip = EmulatorConfig.WIFI_SERVER_IP;
+
+            if (phoneRemote.emulatorConfig != null)
+            {
+                mode = phoneRemote.emulatorConfig.PHONE_EVENT_MODE;
+                usb_server_ip = phoneRemote.emulatorConfig.USBServerIP();
+                wifi_server_ip = phoneRemote.emulatorConfig.WifiServerIP();
+            }
+
       while (!shouldStop) {
-        string addr = EmulatorConfig.Instance.PHONE_EVENT_MODE == EmulatorConfig.Mode.USB
-          ? EmulatorConfig.USB_SERVER_IP : EmulatorConfig.WIFI_SERVER_IP;
+
+        string addr = mode == EmulatorConfig.Mode.USB ? usb_server_ip : usb_server_ip;
 
         // Wait a while in order to enforce the minimum time between connection attempts.
         if (!isFirstTry) {
@@ -107,7 +121,7 @@ namespace Gvr.Internal {
         lastConnectionAttemptTime = DateTime.Now.Ticks;
 
         try {
-          if (EmulatorConfig.Instance.PHONE_EVENT_MODE == EmulatorConfig.Mode.USB) {
+          if (mode == EmulatorConfig.Mode.USB) {
             Debug.LogFormat("Attempting to set up port forwarding.");
             setupPortForwarding(kPhoneEventPort);
           }

@@ -157,6 +157,9 @@ namespace Gvr.Internal {
     private EmulatorClientSocket socket;
     private long lastDownTimeMs;
 
+    // instanced config for additional controllers
+    public EmulatorConfig emulatorConfig = null;
+
     public bool Connected {
       get {
         return socket != null && socket.connected;
@@ -167,17 +170,28 @@ namespace Gvr.Internal {
       if (instance == null) {
         instance = this;
       }
-      if (instance != this) {
-        Debug.LogWarning("PhoneRemote must be a singleton.");
-        enabled = false;
-        return;
-      }
+
+            if (instance != this) {
+              Debug.LogWarning("PhoneRemote must be a singleton.");
+              enabled = false;
+              return;
+            }
+
+
       socket = gameObject.AddComponent<EmulatorClientSocket>();
       socket.Init(this);
       StartCoroutine("EndOfFrame");
     }
 
-    IEnumerator EndOfFrame() {
+    public void initAdditionalController(EmulatorConfig ec)
+    {
+            emulatorConfig = ec;
+            socket = gameObject.AddComponent<EmulatorClientSocket>();
+            socket.Init(this);
+            StartCoroutine("EndOfFrame");
+    }
+
+        IEnumerator EndOfFrame() {
       while (true) {
         yield return new WaitForEndOfFrame();
 

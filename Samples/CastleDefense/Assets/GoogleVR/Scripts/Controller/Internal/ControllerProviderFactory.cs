@@ -15,18 +15,21 @@
 using UnityEngine;
 
 /// @cond
-namespace Gvr.Internal {
-  /// Factory that provides a concrete implementation of IControllerProvider for the
-  /// current platform.
-  static class ControllerProviderFactory {
-    /// Provides a concrete implementation of IControllerProvider appropriate for the current
-    /// platform. This method never returns null. In the worst case, it might return a dummy
-    /// provider if the platform is not supported.
-    static internal IControllerProvider CreateControllerProvider(GvrController owner) {
+namespace Gvr.Internal
+{
+    /// Factory that provides a concrete implementation of IControllerProvider for the
+    /// current platform.
+    static class ControllerProviderFactory
+    {
+        /// Provides a concrete implementation of IControllerProvider appropriate for the current
+        /// platform. This method never returns null. In the worst case, it might return a dummy
+        /// provider if the platform is not supported.
+        static internal IControllerProvider CreateControllerProvider(GvrController owner)
+        {
 #if UNITY_EDITOR || UNITY_STANDALONE
-      // Use the Controller Emulator.
-      return new EmulatorControllerProvider(owner.emulatorConnectionMode, owner.enableGyro,
-          owner.enableAccel);
+            // Use the Controller Emulator.
+            return new EmulatorControllerProvider(owner.emulatorConnectionMode, owner.enableGyro,
+                owner.enableAccel);
 #elif UNITY_ANDROID
       // Use the GVR C API.
       return new AndroidNativeControllerProvider(owner.enableGyro, owner.enableAccel);
@@ -35,7 +38,23 @@ namespace Gvr.Internal {
       Debug.LogWarning("No controller support on this platform.");
       return new DummyControllerProvider();
 #endif
+        }
+
+        static internal IControllerProvider CreateControllerProvider(GvrController.EmulatorConnectionMode emulatorConnectionMode,
+             bool enableGyro, bool enableAccel)
+        {
+#if UNITY_EDITOR || UNITY_STANDALONE
+            // Use the Controller Emulator.
+            return new EmulatorControllerProvider(emulatorConnectionMode, enableGyro, enableAccel, true);
+#elif UNITY_ANDROID
+              // Use the GVR C API.
+              return new AndroidNativeControllerProvider(enableGyro, enableAccel);
+#else
+              // Platform not supported.
+              Debug.LogWarning("No controller support on this platform.");
+              return new DummyControllerProvider();
+#endif
+        }
     }
-  }
 }
 /// @endcond

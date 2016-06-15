@@ -29,28 +29,80 @@ namespace Gvr.Internal {
     /// The last (uncorrected) orientation received from the emulator.
     private Quaternion lastRawOrientation = Quaternion.identity;
 
+    private bool isNotMainController = false;
+
     /// Creates a new EmulatorControllerProvider with the specified settings.
     internal EmulatorControllerProvider(GvrController.EmulatorConnectionMode connectionMode,
-          bool enableGyro, bool enableAccel) {
-      if (connectionMode == GvrController.EmulatorConnectionMode.USB) {
-        EmulatorConfig.Instance.PHONE_EVENT_MODE = EmulatorConfig.Mode.USB;
-      } else if (connectionMode == GvrController.EmulatorConnectionMode.WIFI) {
-        EmulatorConfig.Instance.PHONE_EVENT_MODE = EmulatorConfig.Mode.WIFI;
-      } else {
-        EmulatorConfig.Instance.PHONE_EVENT_MODE = EmulatorConfig.Mode.OFF;
-      }
+          bool enableGyro, bool enableAccel, bool additionalController = false) {
+            if (!additionalController)
+            {
+                if (connectionMode == GvrController.EmulatorConnectionMode.USB)
+                {
+                    EmulatorConfig.Instance.PHONE_EVENT_MODE = EmulatorConfig.Mode.USB;
+                }
+                else if (connectionMode == GvrController.EmulatorConnectionMode.WIFI)
+                {
+                    EmulatorConfig.Instance.PHONE_EVENT_MODE = EmulatorConfig.Mode.WIFI;
+                }
+                else {
+                    EmulatorConfig.Instance.PHONE_EVENT_MODE = EmulatorConfig.Mode.OFF;
+                }
 
-      EmulatorManager.Instance.touchEventListeners += HandleTouchEvent;
-      EmulatorManager.Instance.orientationEventListeners += HandleOrientationEvent;
-      EmulatorManager.Instance.buttonEventListeners += HandleButtonEvent;
+                EmulatorManager.Instance.touchEventListeners += HandleTouchEvent;
+                EmulatorManager.Instance.orientationEventListeners += HandleOrientationEvent;
+                EmulatorManager.Instance.buttonEventListeners += HandleButtonEvent;
 
-      if (enableGyro) {
-        EmulatorManager.Instance.gyroEventListeners += HandleGyroEvent;
-      }
+                if (enableGyro)
+                {
+                    EmulatorManager.Instance.gyroEventListeners += HandleGyroEvent;
+                }
 
-      if (enableAccel) {
-        EmulatorManager.Instance.accelEventListeners += HandleAccelEvent;
-      }
+                if (enableAccel)
+                {
+                    EmulatorManager.Instance.accelEventListeners += HandleAccelEvent;
+                }
+            }
+            else
+            {
+                Debug.Log("Creating additional controller on " + connectionMode.ToString());
+
+                EmulatorManager em;
+                var gameObject = new GameObject("PhoneRemote_" + connectionMode.ToString());
+                em = gameObject.AddComponent<EmulatorManager>();
+                GameObject.DontDestroyOnLoad(em);
+
+                EmulatorConfig ec;
+                var ecgo = new GameObject("PhoneRemoteConfig_" + connectionMode.ToString());
+                ec = ecgo.AddComponent<EmulatorConfig>();
+
+                em.initAdditionalController(ec);
+
+                if (connectionMode == GvrController.EmulatorConnectionMode.USB)
+                    {
+                        ec.PHONE_EVENT_MODE = EmulatorConfig.Mode.USB;
+                    }
+                    else if (connectionMode == GvrController.EmulatorConnectionMode.WIFI)
+                    {
+                    ec.PHONE_EVENT_MODE = EmulatorConfig.Mode.WIFI;
+                    }
+                    else {
+                    ec.PHONE_EVENT_MODE = EmulatorConfig.Mode.OFF;
+                    }
+
+                em.touchEventListeners += HandleTouchEvent;
+                em.orientationEventListeners += HandleOrientationEvent;
+                em.buttonEventListeners += HandleButtonEvent;
+
+                    if (enableGyro)
+                    {
+                    em.gyroEventListeners += HandleGyroEvent;
+                    }
+
+                    if (enableAccel)
+                    {
+                    em.accelEventListeners += HandleAccelEvent;
+                    }
+                }
     }
 
     public void ReadState(ControllerState outState) {

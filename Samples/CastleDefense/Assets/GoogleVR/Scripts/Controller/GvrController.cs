@@ -42,11 +42,14 @@ public enum GvrConnectionState {
 /// to know the controller's current orientation, use GvrController.Orientation.
 public class GvrController : MonoBehaviour {
   private ControllerState controllerState = new ControllerState();
+  private ControllerState[] additionalControllerStates;
   private static GvrController instance;
   private static IControllerProvider controllerProvider;
+  private static IControllerProvider[] additionalControllerProviders;
 
-  /// If true, enable gyroscope on the controller.
-  [Tooltip("If enabled, the controller will report gyroscope readings.")]
+
+    /// If true, enable gyroscope on the controller.
+    [Tooltip("If enabled, the controller will report gyroscope readings.")]
   public bool enableGyro = false;
 
   /// If true, enable accelerometer on the controller.
@@ -58,9 +61,12 @@ public class GvrController : MonoBehaviour {
     USB,
     WIFI,
   }
+
   /// Indicates how we connect to the controller emulator.
   [Tooltip("How to connect to the emulator: USB cable (recommended) or WIFI.")]
   public EmulatorConnectionMode emulatorConnectionMode = EmulatorConnectionMode.USB;
+
+  public EmulatorConnectionMode[] additionalControllerConnections;
 
   /// Returns the controller's current connection state.
   public static GvrConnectionState State {
@@ -226,8 +232,21 @@ public class GvrController : MonoBehaviour {
       return;
     }
     instance = this;
-    if (controllerProvider == null) {
-      controllerProvider = ControllerProviderFactory.CreateControllerProvider(this);
+    if (controllerProvider == null)
+    {
+        controllerProvider = ControllerProviderFactory.CreateControllerProvider(this);
+    }
+
+    if (additionalControllerConnections.Length > 0)
+    {
+
+            additionalControllerProviders = new IControllerProvider[additionalControllerConnections.Length];
+            
+            for (int i = 0; i < additionalControllerProviders.Length; i++)
+            {
+                additionalControllerProviders[i] = ControllerProviderFactory.CreateControllerProvider(
+                    additionalControllerConnections[i], true, true);
+            }
     }
   }
 
